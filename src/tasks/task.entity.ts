@@ -26,6 +26,9 @@ export class Task {
     @Column({ name: 'description' })
     description: string;
 
+    @Column({ name: 'status', default: 1, nullable: false })
+    status: number;
+
     @CreateDateColumn()
     createdAt: Date;
 

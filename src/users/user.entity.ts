@@ -6,7 +6,8 @@ import {
     Relation,
     CreateDateColumn,
     UpdateDateColumn,
-    DeleteDateColumn
+    DeleteDateColumn,
+    ManyToOne
 } from "typeorm";
 import { Project } from '../projects/project.entity';
 import { UserTask } from "../usertask/usertask.entity";
@@ -18,11 +19,17 @@ export class User {
     @PrimaryGeneratedColumn({ type: 'bigint' })
     id: number;
 
-    @Column({ name: 'email' })
+    @Column({ name: 'fullname' })
+    fullname: string;
+
+    @Column({ name: 'email', nullable: false })
     email: string;
 
     @Column({ name: 'password', select: false })
     password?: string;
+
+    @Column({ name: 'role', nullable: false, default: 'member' })
+    role: string;
 
     @CreateDateColumn()
     createdAt: Date;
@@ -33,9 +40,12 @@ export class User {
     @DeleteDateColumn({ default: null })
     deletedAt: Date;
 
-    @OneToMany(() => Project, (project) => project.user)
-    projects: Relation<Project>[];
+    @ManyToOne(() => Project, (project) => project.users)
+    project: Relation<Project>;
 
     @OneToMany(() => UserTask, (usertask) => usertask.user)
     usertasks: Relation<UserTask>[];
+
+    @OneToMany(() => Project, (project) => project.leader)
+    projects: Relation<Project>[];
 }
