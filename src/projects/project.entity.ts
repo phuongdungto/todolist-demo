@@ -23,6 +23,11 @@ export class Project {
     @Column({ name: 'name' })
     name: string;
 
+    @Column({ nullable: false })
+    @ManyToOne(() => User, (user) => user.project)
+    @JoinColumn()
+    leader: string;
+
     @CreateDateColumn()
     createdAt: Date;
 
@@ -32,12 +37,12 @@ export class Project {
     @DeleteDateColumn({ default: null })
     deletedAt: Date;
 
-    @ManyToOne(() => User, (user) => user.projects)
+    @OneToMany(() => User, (user) => user.project)
     @JoinColumn()
-    user: Relation<User>;
+    users: Relation<User>[];
 
     @OneToMany(() => Task, (task) => task.project)
     @JoinColumn()
-    tasks: Relation<User>[];
+    tasks: Relation<Task>[];
 
 }

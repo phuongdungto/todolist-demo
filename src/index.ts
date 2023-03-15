@@ -6,8 +6,8 @@ import bodyParser from 'body-parser';
 import { NotFound } from 'http-errors';
 import { AppDataSource } from "./core/database";
 import userRouter from "./users/user.router";
-import * as dotenv from "dotenv";
 import * as resUtil from "./core/utils/res.util";
+import * as dotenv from "dotenv";
 dotenv.config();
 
 async function App() {
