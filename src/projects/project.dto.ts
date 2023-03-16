@@ -1,5 +1,10 @@
 
-export class ProjectDTO {
+export class CreateProjectDTO {
     name: string
-    userId: number
+    leaderId: number
+}
+
+export class UpdateProjectDTO {
+    name?: string
+    leaderId?: number
 }

@@ -6,7 +6,8 @@ import {
     Relation,
     CreateDateColumn,
     UpdateDateColumn,
-    DeleteDateColumn
+    DeleteDateColumn,
+    Column
 } from "typeorm";
 import { User } from '../users/user.entity';
 import { Task } from "../tasks/task.entity";
@@ -31,7 +32,13 @@ export class UserTask {
     @JoinColumn()
     user: Relation<User>;
 
+    @Column({ nullable: false })
+    userId: number
+
     @ManyToOne(() => Task, (task) => task.usertasks)
     @JoinColumn()
     task: Relation<Task>;
+
+    @Column({ nullable: false })
+    taskId: number
 }

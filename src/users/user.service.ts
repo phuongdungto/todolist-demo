@@ -1,14 +1,17 @@
-import { CreateUserDTO } from "./user.dto";
+import { CreateUserDTO, AddUserProjectDTO } from "./user.dto";
 import { AppDataSource } from "../core/database";
 import { User } from "./user.entity";
+import { Project } from "../projects/project.entity";
 import { BadRequest, Unauthorized, NotFound } from 'http-errors';
 import * as jwt from 'jsonwebtoken';
 import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import * as dotenv from "dotenv";
+import { In } from "typeorm";
 dotenv.config();
 
 const userRepo = AppDataSource.getRepository(User);
+const projectRepo = AppDataSource.getRepository(Project)
 const saltRounds = 10;
 
 export async function signup(CreateUserDTO: CreateUserDTO) {
@@ -41,4 +44,15 @@ export async function signin(CreateUserDTO: CreateUserDTO) {
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRATION });
     delete user.password;
     return { information: user, accessToken };
+}
+
+export async function addUsersToProject(addUser: AddUserProjectDTO) {
+    const project = projectRepo.findOneBy({
+        id: addUser.projectId
+    })
+    if (!project) throw new NotFound('Project not found');
+    await userRepo.update(
+        { id: In(addUser.userId) },
+        { projectId: addUser.projectId },
+    )
 }

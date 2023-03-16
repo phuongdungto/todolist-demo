@@ -7,7 +7,8 @@ import {
     CreateDateColumn,
     UpdateDateColumn,
     DeleteDateColumn,
-    ManyToOne
+    ManyToOne,
+    JoinColumn
 } from "typeorm";
 import { Project } from '../projects/project.entity';
 import { UserTask } from "../usertask/usertask.entity";
@@ -41,7 +42,11 @@ export class User {
     deletedAt: Date;
 
     @ManyToOne(() => Project, (project) => project.users)
+    @JoinColumn()
     project: Relation<Project>;
+
+    @Column({ nullable: true })
+    projectId: number
 
     @OneToMany(() => UserTask, (usertask) => usertask.user)
     usertasks: Relation<UserTask>[];

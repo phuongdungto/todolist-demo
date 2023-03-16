@@ -10,6 +10,9 @@ import { updateTable1678873399670 } from "../migrations/1678873399670-update-tab
 import { updateUser1678881500354 } from "../migrations/1678881500354-update-user";
 import { updateRelation1678883602238 } from "../migrations/1678883602238-update-relation";
 import { updateRelationV21678885295463 } from "../migrations/1678885295463-update-relation-v2";
+import { updateProjects1678901935313 } from "../migrations/1678901935313-update-projects";
+import { updateRelationV31678907212221 } from "../migrations/1678907212221-update-relation-v3";
+import { updateProjectV21678940490230 } from "../migrations/1678940490230-update-project-v2";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -23,8 +26,11 @@ export const AppDataSource = new DataSource({
     entities: [User, Project, Task, UserTask],
     //entities: [path.join(__dirname, "../**/*.entity{.js,.ts}")],
     subscribers: [],
-    migrations: [init1678867223097, updateTable1678873399670, updateUser1678881500354,
-        updateRelation1678883602238, updateRelationV21678885295463],
+    migrations: [
+        init1678867223097, updateTable1678873399670, updateUser1678881500354,
+        updateRelation1678883602238, updateRelationV21678885295463, updateProjects1678901935313,
+        updateRelationV31678907212221, updateProjectV21678940490230
+    ],
     //migrations: [path.join(__dirname, "../migrations/*{.js,.ts}")],
     namingStrategy: new SnakeNamingStrategy(),
     synchronize: false,
