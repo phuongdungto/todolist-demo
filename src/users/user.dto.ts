@@ -17,3 +17,8 @@ export class AddUserProjectDTO {
     userId: number[]
     projectId: number
 }
+
+export class AddUserTaskDTO {
+    userId: number[]
+    taskId: number
+}

@@ -1,1 +1,1 @@
-enum Roles { ADMIN = 'admin', MENBER = 'menber', MANAGER = 'manager' };
+export enum Roles { ADMIN = 'admin', MENBER = 'member', MANAGER = 'manager' };

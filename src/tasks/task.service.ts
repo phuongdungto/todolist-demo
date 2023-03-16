@@ -7,7 +7,7 @@ import { In } from "typeorm";
 const taskRepo = AppDataSource.getRepository(Task);
 
 export async function createTask(createTaskDTO: CreateTaskDTO) {
-    const newTask = taskRepo.save(createTaskDTO);
+    const newTask = await taskRepo.save(createTaskDTO);
     if (!newTask) {
         throw new BadRequest("Cant't create task");
     }
@@ -15,7 +15,7 @@ export async function createTask(createTaskDTO: CreateTaskDTO) {
 }
 
 export async function updateTask(id: number, updateTaskDTO: UpdateTaskDTO) {
-    const task = taskRepo.findOneBy({
+    const task = await taskRepo.findOneBy({
         id: id
     })
     if (!task) {

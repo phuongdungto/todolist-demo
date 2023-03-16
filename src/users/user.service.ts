@@ -1,4 +1,4 @@
-import { CreateUserDTO, AddUserProjectDTO } from "./user.dto";
+import { CreateUserDTO, AddUserProjectDTO, AddUserTaskDTO } from "./user.dto";
 import { AppDataSource } from "../core/database";
 import { User } from "./user.entity";
 import { Project } from "../projects/project.entity";
@@ -8,10 +8,15 @@ import * as bcrypt from 'bcrypt';
 import * as crypto from 'crypto';
 import * as dotenv from "dotenv";
 import { In } from "typeorm";
+import { Task } from "../tasks/task.entity";
+import { UserTask } from "../usertask/usertask.entity";
 dotenv.config();
 
 const userRepo = AppDataSource.getRepository(User);
-const projectRepo = AppDataSource.getRepository(Project)
+const projectRepo = AppDataSource.getRepository(Project);
+const taskRepo = AppDataSource.getRepository(Task);
+const usertaskRepo = AppDataSource.getRepository(UserTask);
+
 const saltRounds = 10;
 
 export async function signup(CreateUserDTO: CreateUserDTO) {
@@ -42,12 +47,13 @@ export async function signin(CreateUserDTO: CreateUserDTO) {
     }
     const payload = { id: user.id, email: user.email, role: user.role };
     const accessToken = jwt.sign(payload, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRATION });
+    console.log(accessToken);
     delete user.password;
     return { information: user, accessToken };
 }
 
 export async function addUsersToProject(addUser: AddUserProjectDTO) {
-    const project = projectRepo.findOneBy({
+    const project = await projectRepo.findOneBy({
         id: addUser.projectId
     })
     if (!project) throw new NotFound('Project not found');
@@ -55,4 +61,41 @@ export async function addUsersToProject(addUser: AddUserProjectDTO) {
         { id: In(addUser.userId) },
         { projectId: addUser.projectId },
     )
+}
+
+export async function deleteUsersOfProject(addUser: AddUserProjectDTO) {
+    const project = await projectRepo.findOneBy({
+        id: addUser.projectId
+    })
+    if (!project) throw new NotFound('Project not found');
+    await userRepo.update(
+        {
+            id: In(addUser.userId),
+            projectId: addUser.projectId
+        },
+        { projectId: null },
+    )
+}
+
+export async function addUsersToTask(addUser: AddUserTaskDTO) {
+    const task = await taskRepo.findOneBy({
+        id: addUser.taskId
+    })
+    if (!task) throw new NotFound('Task not found');
+    const usertask = addUser.userId.map(user => ({
+        userId: user,
+        taskId: addUser.taskId
+    }));
+    await AppDataSource.createQueryBuilder()
+        .insert().into(UserTask)
+        .values(usertask).execute();
+}
+
+export async function deleteUsersOfTask(id: number[]) {
+    await AppDataSource.createQueryBuilder().delete()
+        .from(UserTask)
+        .where('id In(:id)', {
+            id
+        })
+        .execute();
 }
