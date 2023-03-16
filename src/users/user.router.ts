@@ -6,7 +6,9 @@ import {
     addUsersToProject,
     addUsersToTask,
     deleteUsersOfProject,
-    deleteUsersOfTask
+    deleteUsersOfTask,
+    getUsers,
+    getUser
 } from './user.controller';
 import { authorization } from '../core/middleware/auth.middleware';
 
@@ -18,5 +20,7 @@ router.put('/project', authorization(Roles.ADMIN, Roles.MANAGER), addUsersToProj
 router.post('/task', authorization(Roles.ADMIN, Roles.MANAGER), addUsersToTask);
 router.delete('/project', authorization(Roles.ADMIN, Roles.MANAGER), deleteUsersOfProject);
 router.delete('/task', authorization(Roles.ADMIN, Roles.MANAGER), deleteUsersOfTask);
+router.get('/', getUsers);
+router.get('/:id', getUser);
 
 export default router;
