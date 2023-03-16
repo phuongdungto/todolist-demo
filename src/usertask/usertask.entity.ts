@@ -25,9 +25,6 @@ export class UserTask {
     @UpdateDateColumn()
     updatedAt: Date;
 
-    @DeleteDateColumn({ default: null })
-    deletedAt: Date;
-
     @ManyToOne(() => User, (user) => user.usertasks)
     @JoinColumn()
     user: Relation<User>;
