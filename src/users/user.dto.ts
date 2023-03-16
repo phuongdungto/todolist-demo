@@ -12,3 +12,8 @@ export class LoginDTO {
 export class UpdateUserDTO {
     password: string
 }
+
+export class AddUserProjectDTO {
+    userId: number[]
+    projectId: number
+}

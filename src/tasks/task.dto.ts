@@ -1,6 +1,12 @@
-export class TaskDTO {
+export class CreateTaskDTO {
     name: string
     description: string
     projectId: number
-    userId?: number
+    status: number
+}
+
+export class UpdateTaskDTO {
+    name?: string
+    description?: string
+    status?: number
 }

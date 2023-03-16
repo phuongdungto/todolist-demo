@@ -42,6 +42,9 @@ export class Task {
     @JoinColumn()
     project: Relation<Project>[];
 
+    @Column({ nullable: false })
+    projectId: number
+
     @OneToMany(() => UserTask, (usertask) => usertask.task)
     usertasks: Relation<UserTask>[];
 }
