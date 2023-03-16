@@ -14,6 +14,7 @@ import { updateProjects1678901935313 } from "../migrations/1678901935313-update-
 import { updateRelationV31678907212221 } from "../migrations/1678907212221-update-relation-v3";
 import { updateProjectV21678940490230 } from "../migrations/1678940490230-update-project-v2";
 import { updateUserTask1678955594904 } from "../migrations/1678955594904-update-userTask";
+import { updateTypeEnum1678979262412 } from "../migrations/1678979262412-update-type-enum";
 import * as dotenv from "dotenv";
 dotenv.config();
 
@@ -32,7 +33,8 @@ export const AppDataSource = new DataSource({
     migrations: [
         init1678867223097, updateTable1678873399670, updateUser1678881500354,
         updateRelation1678883602238, updateRelationV21678885295463, updateProjects1678901935313,
-        updateRelationV31678907212221, updateProjectV21678940490230, updateUserTask1678955594904
+        updateRelationV31678907212221, updateProjectV21678940490230, updateUserTask1678955594904,
+        updateTypeEnum1678979262412
     ],
     // migrations: [path.join(__dirname, "../migrations/*{.js,.ts}")],
     namingStrategy: new SnakeNamingStrategy(),

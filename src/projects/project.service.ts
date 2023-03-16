@@ -1,9 +1,9 @@
 import { AppDataSource } from "../core/database";
 import { Project } from "./project.entity";
 import { BadRequest, Unauthorized, NotFound } from 'http-errors';
-import * as crypto from 'crypto';
-import * as dotenv from "dotenv";
-import { CreateProjectDTO, UpdateProjectDTO } from "./project.dto"
+import { CreateProjectDTO, UpdateProjectDTO } from "./project.dto";
+import { pagination } from "../core/interfaces/pagination.interface";
+import { Pagination } from "../core/utils/pagination.util";
 
 const projectRepo = AppDataSource.getRepository(Project);
 export async function createProject(project: CreateProjectDTO) {
@@ -23,4 +23,29 @@ export async function updateProject(id: number, project: UpdateProjectDTO) {
     }
     await projectRepo.update(id, project);
     return updateProject;
+}
+
+export async function getProjects(pagination: pagination) {
+    const query = Pagination(Project, pagination);
+    const [list, count] = await projectRepo.findAndCount({
+        ...query,
+        // relations: {
+        //     users: true
+        // }
+    })
+
+    return { totalPages: Math.ceil(count / pagination.limit), projects: list };
+}
+
+export async function getProject(id: number) {
+    const project = await projectRepo.findOne({
+        where: { id: id },
+        relations: {
+            // users: true,
+            tasks: true
+        }
+    })
+    if (!project)
+        throw new NotFound('Project not found');
+    return project;
 }

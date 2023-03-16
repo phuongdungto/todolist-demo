@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { Project } from "../projects/project.entity";
 import { UserTask } from "../usertask/usertask.entity";
+import { TaskStatus } from "../core/enum";
 @Entity('tasks')
 export class Task {
     constructor(data: Partial<Task>) {
@@ -26,8 +27,14 @@ export class Task {
     @Column({ name: 'description' })
     description: string;
 
-    @Column({ name: 'status', default: 1, nullable: false })
-    status: number;
+    @Column({
+        name: 'status',
+        nullable: false,
+        type: 'enum',
+        enum: TaskStatus,
+        default: TaskStatus.MEDIUM
+    })
+    status: TaskStatus;
 
     @CreateDateColumn()
     createdAt: Date;

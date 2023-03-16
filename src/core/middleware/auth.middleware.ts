@@ -1,7 +1,6 @@
 import * as jwt from 'jsonwebtoken';
 import { Request, Response, NextFunction } from 'express';
 import { Unauthorized, Forbidden } from 'http-errors';
-// import { ReqUsers } from '../../types/express';
 import { ReqUser } from '../interfaces/user.interface';
 import * as dotenv from 'dotenv';
 dotenv.config();

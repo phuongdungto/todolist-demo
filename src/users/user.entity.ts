@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { Project } from '../projects/project.entity';
 import { UserTask } from "../usertask/usertask.entity";
+import { Roles } from "../core/enum";
 @Entity('users')
 export class User {
     constructor(data: Partial<User>) {
@@ -29,8 +30,14 @@ export class User {
     @Column({ name: 'password', select: false })
     password?: string;
 
-    @Column({ name: 'role', nullable: false, default: 'member' })
-    role: string;
+    @Column({
+        name: 'role',
+        type: 'enum',
+        enum: Roles,
+        default: Roles.MENBER,
+        nullable: false
+    })
+    role: Roles;
 
     @CreateDateColumn()
     createdAt: Date;

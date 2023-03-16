@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 import { validate } from "../core/utils/validate.util";
 import * as userService from "./user.service";
 import { AddUserProjectDTO, AddUserTaskDTO, CreateUserDTO, LoginDTO } from "./user.dto";
+import { Roles } from "../core/enum";
+import { pagination } from "../core/interfaces/pagination.interface";
 
 export async function signup(req: Request, res: Response, next: NextFunction) {
     try {
@@ -82,6 +84,35 @@ export async function deleteUsersOfTask(req: Request, res: Response, next: NextF
         const value = validate(req.body, schema);
         await userService.deleteUsersOfTask(value);
         return res.status(200).send();
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export async function getUsers(req: Request, res: Response, next: NextFunction) {
+    try {
+        const schema = Joi.object({
+            page: Joi.number().default(1),
+            limit: Joi.number().default(5).min(1).max(20),
+            sort: Joi.string().allow(''),
+            sortBy: Joi.object().valid(...Object.values(['asc', 'desc'])).allow(''),
+            email: Joi.string().allow(''),
+            fullname: Joi.string().allow(''),
+            role: Joi.array().items(Joi.string().valid(...Object.values({ ...Roles }))),
+            projectId: Joi.number().allow('')
+        })
+        const value = validate<pagination>(req.query, schema);
+        const result = await userService.getUsers(value);
+        return res.status(200).send(result);
+    } catch (error) {
+        return next(error);
+    }
+}
+
+export async function getUser(req: Request, res: Response, next: NextFunction) {
+    try {
+        const result = await userService.getUser(+req.params.id);
+        return res.status(200).send(result);
     } catch (error) {
         return next(error);
     }

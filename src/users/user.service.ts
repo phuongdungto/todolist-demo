@@ -10,6 +10,8 @@ import * as dotenv from "dotenv";
 import { In } from "typeorm";
 import { Task } from "../tasks/task.entity";
 import { UserTask } from "../usertask/usertask.entity";
+import { pagination } from "../core/interfaces/pagination.interface";
+import { Pagination } from "../core/utils/pagination.util";
 dotenv.config();
 
 const userRepo = AppDataSource.getRepository(User);
@@ -98,4 +100,23 @@ export async function deleteUsersOfTask(id: number[]) {
             id
         })
         .execute();
+}
+
+export async function getUsers(pagination: pagination) {
+    const query = Pagination(User, pagination);
+    const [list, count] = await userRepo.findAndCount({
+        ...query
+    })
+    return { totalPages: Math.ceil(count / pagination.limit), users: list };
+}
+
+export async function getUser(id: number) {
+    const user = await userRepo.findOne({
+        where: { id: id },
+        relations: {
+            projects: true,
+            usertasks: true
+        }
+    })
+    return user;
 }
